@@ -5,6 +5,8 @@ import "./App.css";
 
 import Layout from "./components/Layout";
 import Home from "./pages/Home";
+import Play from "./pages/Play";
+import Result from "./pages/Result";
 import QuestionBank from "./pages/QuestionBank";
 import QuestionDetail from "./pages/QuestionDetail";
 import NotFound from "./pages/NotFound";
@@ -40,6 +42,11 @@ const App = () => {
           index
           element={<Home playerName={playerName} setPlayerName={setPlayerName} />}
         />
+        <Route
+          path="play"
+          element={<Play questions={questions} playerName={playerName} />}
+        />
+        <Route path="result" element={<Result />} />
         <Route
           path="questions"
           element={
