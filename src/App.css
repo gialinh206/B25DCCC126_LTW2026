@@ -105,6 +105,12 @@ input {
   opacity: 0.8;
 }
 
+.home-record {
+  margin: -6px 0 18px;
+  color: #f6c443;
+  font-weight: 700;
+}
+
 .home-form {
   display: flex;
   flex-direction: column;

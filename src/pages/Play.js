@@ -1,21 +1,36 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { TIME_PER_QUESTION } from "../data";
-import { calcPrize } from "../utils";
+import { calcPrize, generateAudiencePoll } from "../utils";
 import MoneyLadder from "../components/MoneyLadder";
 import QuestionCard from "../components/QuestionCard";
+import Lifelines from "../components/Lifelines";
+import AudienceChart from "../components/AudienceChart";
 
-const Play = ({ questions, playerName }) => {
+const Play = ({ questions, playerName, addHistoryRecord }) => {
   const navigate = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [timeLeft, setTimeLeft] = useState(TIME_PER_QUESTION);
   const [status, setStatus] = useState("answering");
   const [selectedAnswer, setSelectedAnswer] = useState(null);
+  const [usedLifelines, setUsedLifelines] = useState({
+    fiftyFifty: false,
+    audience: false,
+  });
+  const [hiddenOptions, setHiddenOptions] = useState([]);
+  const [audiencePoll, setAudiencePoll] = useState(null);
   const currentQ = questions[currentIndex];
 
   const finishGame = useCallback(
     (correctCount, reason) => {
       const prize = calcPrize(correctCount, reason);
+      addHistoryRecord({
+        id: Date.now(),
+        name: playerName,
+        prize,
+        correctCount,
+        playedAt: new Date().toLocaleString("vi-VN"),
+      });
       let message = "Chúc mừng! Bạn đã trở thành triệu phú";
       if (reason === "wrong") message = "Rất tiếc, bạn đã trả lời sai!";
       if (reason === "timeout") message = "Hết giờ!";
@@ -31,7 +46,7 @@ const Play = ({ questions, playerName }) => {
         },
       });
     },
-    [playerName, navigate],
+    [playerName, addHistoryRecord, navigate],
   );
 
   useEffect(() => {
@@ -74,6 +89,8 @@ const Play = ({ questions, playerName }) => {
             setStatus("answering");
             setSelectedAnswer(null);
             setTimeLeft(TIME_PER_QUESTION);
+            setHiddenOptions([]);
+            setAudiencePoll(null);
           }
         } else {
           finishGame(currentIndex, "wrong");
@@ -89,6 +106,33 @@ const Play = ({ questions, playerName }) => {
     setStatus("locked");
   };
 
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (status !== "answering") return;
+      const keyMap = { A: 0, B: 1, C: 2, D: 3 };
+      const answerIndex = keyMap[event.key.toUpperCase()];
+      if (answerIndex !== undefined && !hiddenOptions.includes(answerIndex)) {
+        setSelectedAnswer(answerIndex);
+        setStatus("locked");
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [status, hiddenOptions]);
+
+  const handleUseFiftyFifty = () => {
+    const wrongIndices = [0, 1, 2, 3].filter((i) => i !== currentQ.answer);
+    const shuffled = wrongIndices.sort(() => 0.5 - Math.random());
+    setHiddenOptions([shuffled[0], shuffled[1]]);
+    setUsedLifelines((prev) => ({ ...prev, fiftyFifty: true }));
+  };
+
+  const handleUseAudience = () => {
+    setAudiencePoll(generateAudiencePoll(currentQ.answer, hiddenOptions));
+    setUsedLifelines((prev) => ({ ...prev, audience: true }));
+  };
+
   const handleQuit = () => finishGame(currentIndex, "quit");
 
   if (!playerName) return <Navigate to="/" replace />;
@@ -102,23 +146,24 @@ const Play = ({ questions, playerName }) => {
             <div className="header-badge primary">CÂU {currentIndex + 1}/15</div>
             <div className="header-badge">{timeLeft}s</div>
           </div>
-          <button
-            className="lifeline-btn"
-            onClick={handleQuit}
+          <Lifelines
+            usedLifelines={usedLifelines}
+            onFiftyFifty={handleUseFiftyFifty}
+            onAudience={handleUseAudience}
+            onQuit={handleQuit}
             disabled={status !== "answering"}
-          >
-            Dừng cuộc chơi
-          </button>
+          />
         </div>
 
         <div className="game-layout">
           <div className="play-main">
+            {audiencePoll && <AudienceChart poll={audiencePoll} />}
             <QuestionCard
               question={currentQ}
               currentIndex={currentIndex}
               selectedAnswer={selectedAnswer}
               status={status}
-              hiddenOptions={[]}
+              hiddenOptions={hiddenOptions}
               onSelectAnswer={handleSelectAnswer}
             />
           </div>

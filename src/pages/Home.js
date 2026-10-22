@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { formatMoney } from "../data";
 
-const Home = ({ playerName, setPlayerName }) => {
+const Home = ({ playerName, setPlayerName, history = [] }) => {
   const [nameInput, setNameInput] = useState(playerName || "");
   const navigate = useNavigate();
 
@@ -11,6 +12,10 @@ const Home = ({ playerName, setPlayerName }) => {
     setPlayerName(nameInput.trim());
     navigate("/play");
   };
+  const record = history.reduce(
+    (best, item) => (item.prize > (best?.prize ?? -1) ? item : best),
+    null,
+  );
 
   return (
     <div className="app-container">
@@ -25,6 +30,11 @@ const Home = ({ playerName, setPlayerName }) => {
           <h1>AI LÀ TRIỆU PHÚ</h1>
           <p>Millionaire Quiz (H5)</p>
         </div>
+        {record && (
+          <p className="home-record">
+            Kỷ lục: {formatMoney(record.prize)} – {record.name}
+          </p>
+        )}
 
         <form className="home-form" onSubmit={handleStart}>
           <input
