@@ -316,6 +316,19 @@ input {
   background: linear-gradient(90deg, #e9b34d 0%, #d39a2b 100%) !important;
   border-color: #f6d777 !important;
   color: #0d0d0d !important;
+  animation: answer-lock-blink 0.45s ease-in-out infinite alternate;
+}
+
+@keyframes answer-lock-blink {
+  from {
+    box-shadow: 0 0 5px rgba(246, 196, 67, 0.45);
+    filter: brightness(0.85);
+  }
+
+  to {
+    box-shadow: 0 0 22px rgba(255, 220, 105, 0.95);
+    filter: brightness(1.2);
+  }
 }
 
 .answer-btn.correct {

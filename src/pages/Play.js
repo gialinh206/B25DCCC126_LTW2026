@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { TIME_PER_QUESTION } from "../data";
 import { calcPrize, generateAudiencePoll } from "../utils";
@@ -9,6 +9,32 @@ import AudienceChart from "../components/AudienceChart";
 
 const Play = ({ questions, playerName, addHistoryRecord }) => {
   const navigate = useNavigate();
+  const shuffledQuestions = useMemo(
+    () =>
+      questions.map((question) => {
+        const options = question.options.map((text, originalIndex) => ({
+          text,
+          originalIndex,
+        }));
+
+        for (let i = options.length - 1; i > 0; i -= 1) {
+          const randomIndex = Math.floor(Math.random() * (i + 1));
+          [options[i], options[randomIndex]] = [
+            options[randomIndex],
+            options[i],
+          ];
+        }
+
+        return {
+          ...question,
+          options: options.map((option) => option.text),
+          answer: options.findIndex(
+            (option) => option.originalIndex === question.answer,
+          ),
+        };
+      }),
+    [questions],
+  );
   const [currentIndex, setCurrentIndex] = useState(0);
   const [timeLeft, setTimeLeft] = useState(TIME_PER_QUESTION);
   const [status, setStatus] = useState("answering");
@@ -19,7 +45,7 @@ const Play = ({ questions, playerName, addHistoryRecord }) => {
   });
   const [hiddenOptions, setHiddenOptions] = useState([]);
   const [audiencePoll, setAudiencePoll] = useState(null);
-  const currentQ = questions[currentIndex];
+  const currentQ = shuffledQuestions[currentIndex];
 
   const finishGame = useCallback(
     (correctCount, reason) => {
