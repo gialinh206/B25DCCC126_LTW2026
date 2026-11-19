@@ -1,0 +1,98 @@
+[
+  {
+    "id": 1,
+    "code": "MH101",
+    "name": "Giải tích 1",
+    "credits": 3,
+    "semester": "Học kỳ 1",
+    "score": 7.5
+  },
+  {
+    "id": 2,
+    "code": "MH102",
+    "name": "Vật lý đại cương",
+    "credits": 3,
+    "semester": "Học kỳ 1",
+    "score": 6.2
+  },
+  {
+    "id": 3,
+    "code": "MH103",
+    "name": "Tin học cơ sở",
+    "credits": 2,
+    "semester": "Học kỳ 1",
+    "score": 9.4
+  },
+  {
+    "id": 4,
+    "code": "MH104",
+    "name": "Lập trình C++",
+    "credits": 3,
+    "semester": "Học kỳ 1",
+    "score": 8.8
+  },
+  {
+    "id": 5,
+    "code": "MH201",
+    "name": "Giải tích 2",
+    "credits": 3,
+    "semester": "Học kỳ 2",
+    "score": 5.8
+  },
+  {
+    "id": 6,
+    "code": "MH202",
+    "name": "Cấu trúc dữ liệu và giải thuật",
+    "credits": 3,
+    "semester": "Học kỳ 2",
+    "score": 8.1
+  },
+  {
+    "id": 7,
+    "code": "MH203",
+    "name": "Đại số tuyến tính",
+    "credits": 3,
+    "semester": "Học kỳ 2",
+    "score": 7.0
+  },
+  {
+    "id": 8,
+    "code": "MH204",
+    "name": "Kỹ năng giao tiếp",
+    "credits": 2,
+    "semester": "Học kỳ 2",
+    "score": 9.0
+  },
+  {
+    "id": 9,
+    "code": "MH301",
+    "name": "Cơ sở dữ liệu",
+    "credits": 3,
+    "semester": "Học kỳ 3",
+    "score": 8.4
+  },
+  {
+    "id": 10,
+    "code": "MH302",
+    "name": "Mạng máy tính",
+    "credits": 3,
+    "semester": "Học kỳ 3",
+    "score": 6.9
+  },
+  {
+    "id": 11,
+    "code": "MH303",
+    "name": "Lập trình hướng đối tượng",
+    "credits": 3,
+    "semester": "Học kỳ 3",
+    "score": 3.8
+  },
+  {
+    "id": 12,
+    "code": "MH304",
+    "name": "Lập trình web",
+    "credits": 3,
+    "semester": "Học kỳ 3",
+    "score": 9.6
+  }
+]
